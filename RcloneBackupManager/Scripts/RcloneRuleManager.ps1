@@ -32,6 +32,11 @@ param (
     [switch]$IncludeGitHistory = $true
 )
 
+# 強制設定 PowerShell 與 Windows 控制台的輸入/輸出編碼為 UTF-8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::InputEncoding = [System.Text.Encoding]::UTF8
+
 # 確保路徑正則化為絕對路徑
 $TargetDir = (Resolve-Path $TargetDir).Path
 

@@ -287,10 +287,9 @@ namespace RcloneBackupManager
                 WorkingDirectory = Path.GetDirectoryName(scriptPath) ?? baseDir
             };
 
-            // 2. 設定 ProcessStartInfo 的編碼為系統 OEM 編碼 (防亂碼核心重點)
-            Encoding oemEncoding = Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage);
-            psi.StandardOutputEncoding = oemEncoding;
-            psi.StandardErrorEncoding = oemEncoding;
+            // 2. 設定 ProcessStartInfo 的編碼為 UTF-8，與 PowerShell 的 UTF-8 控制台輸出完美對接，防止 Rclone 縮寫符號 (…) 被轉為 Big5 亂碼
+            psi.StandardOutputEncoding = Encoding.UTF8;
+            psi.StandardErrorEncoding = Encoding.UTF8;
 
             _currentProcess = new Process { StartInfo = psi, EnableRaisingEvents = true };
 
