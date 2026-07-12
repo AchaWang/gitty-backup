@@ -215,31 +215,26 @@ namespace RcloneBackupManager
             // 尋找腳本路徑
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string scriptPath = Path.Combine(baseDir, "Scripts", "RcloneRuleManager.ps1");
-            string fixBomPath = Path.Combine(baseDir, "Scripts", "Fix-Bom.ps1");
 
             // 如果 bin 目錄下找不到，嘗試往上找開發目錄
             if (!File.Exists(scriptPath))
             {
                 scriptPath = Path.GetFullPath(Path.Combine(baseDir, @"..\..\..\Scripts\RcloneRuleManager.ps1"));
-                fixBomPath = Path.GetFullPath(Path.Combine(baseDir, @"..\..\..\Scripts\Fix-Bom.ps1"));
             }
 
             if (!File.Exists(scriptPath))
             {
                 // 嘗試找上層或移動後的 _Project/rclone-ui 目錄
                 scriptPath = Path.GetFullPath(Path.Combine(baseDir, @"..\..\..\..\RcloneRuleManager.ps1"));
-                fixBomPath = Path.GetFullPath(Path.Combine(baseDir, @"..\..\..\..\Fix-Bom.ps1"));
             }
 
             if (!File.Exists(scriptPath))
             {
-                scriptPath = @"C:\Users\Acha\Desktop\Acha\rclone-ui\RcloneRuleManager.ps1";
-                fixBomPath = @"C:\Users\Acha\Desktop\Acha\rclone-ui\Fix-Bom.ps1";
+                scriptPath = @"C:\Users\Acha\Desktop\Acha\_Project\rclone-ui\RcloneRuleManager.ps1";
             }
             if (!File.Exists(scriptPath))
             {
-                scriptPath = @"C:\Users\Acha\Desktop\Acha\_Project\rclone-ui\RcloneRuleManager.ps1";
-                fixBomPath = @"C:\Users\Acha\Desktop\Acha\_Project\rclone-ui\Fix-Bom.ps1";
+                scriptPath = @"C:\Users\Acha\Desktop\Acha\rclone-ui\RcloneRuleManager.ps1";
             }
 
             if (!File.Exists(scriptPath))
@@ -259,7 +254,7 @@ namespace RcloneBackupManager
             AppendLog($"=======================================================\n");
 
             string includeGitParam = includeGit ? "$true" : "$false";
-            string psCommand = $"& '{fixBomPath}' ; & '{scriptPath}' -Action {action} -TargetDir '{targetDir}' -RemotePath '{remotePath}' -RulesFile '{rulesPath}' -IncludeGitHistory:{includeGitParam}";
+            string psCommand = $"& '{scriptPath}' -Action {action} -TargetDir '{targetDir}' -RemotePath '{remotePath}' -RulesFile '{rulesPath}' -IncludeGitHistory:{includeGitParam}";
 
             var psi = new ProcessStartInfo
             {
