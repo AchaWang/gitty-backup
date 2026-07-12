@@ -166,26 +166,43 @@ switch ($Action) {
 
                     # 移除開頭斜線來組裝
                     $LineBody = $Line.TrimStart('/')
+                    $IsKnownDir = $Line.EndsWith("/") -or $LineBody -match "^(node_modules|\.venv|__pycache__|bin|obj|dist|build|env|venv|ENV|env\.bak|venv\.bak|uploads|images)$"
+                    $CleanBody = $LineBody.TrimEnd('/')
+
+                    $RulesToAdd = @()
                     if ($Line.StartsWith("/")) {
-                        $FinalRule = "$RuleAction $RulePrefix/$LineBody"
+                        # 頂層指定規則
+                        if ($IsKnownDir) {
+                            $RulesToAdd += "$RuleAction $RulePrefix/$CleanBody/**"
+                        } else {
+                            $RulesToAdd += "$RuleAction $RulePrefix/$CleanBody"
+                        }
                     } else {
-                        $FinalRule = "$RuleAction $RulePrefix/**/$LineBody"
+                        # 非斜線開頭：Git 規範是「當層與所有深層子目錄皆適用」
+                        # 因為 Rclone 中的 /**/ 必須匹配至少一層目錄，所以必須同時生成當層 ($RulePrefix/...) 與深層 ($RulePrefix/**/...)
+                        if ($IsKnownDir) {
+                            $RulesToAdd += "$RuleAction $RulePrefix/$CleanBody/**"
+                            $RulesToAdd += "$RuleAction $RulePrefix/**/$CleanBody/**"
+                        } else {
+                            $RulesToAdd += "$RuleAction $RulePrefix/$CleanBody"
+                            $RulesToAdd += "$RuleAction $RulePrefix/**/$CleanBody"
+                        }
                     }
-
-                    # 針對常見大資料夾補上 /** 防止 Rclone 判定不完整
-                    if ($FinalRule.EndsWith("/") -or $LineBody -match "^(node_modules|\.venv|__pycache__|bin|obj|dist|build)$") {
-                        $FinalRule = $FinalRule.TrimEnd('/') + "/**"
-                    }
-
-                    $FinalRule = $FinalRule.Replace("//", "/")
 
                     if ($RuleAction -eq "+") {
-                        # 收集至全域高優先權 Include 區段
                         $AllIncludeRules += "# From: $($IgnoreFile.FullName.Replace($TargetDir, '').TrimStart('\'))"
-                        $AllIncludeRules += $FinalRule
+                    }
+                    foreach ($r in $RulesToAdd) {
+                        $FinalRule = $r.Replace("//", "/")
+                        if ($RuleAction -eq "+") {
+                            $AllIncludeRules += $FinalRule
+                        } else {
+                            $RepoExcludes += $FinalRule
+                        }
+                    }
+                    if ($RuleAction -eq "+") {
                         $Summary += "     🟢 (強制保留) -> $Line"
                     } else {
-                        $RepoExcludes += $FinalRule
                         $Summary += "     🔴 (過濾排除) -> $Line"
                     }
                 }
