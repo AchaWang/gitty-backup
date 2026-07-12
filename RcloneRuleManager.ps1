@@ -249,7 +249,8 @@ switch ($Action) {
         $ExtraArgs = @()
         if ($SyncMode -eq "Sync") {
             $SubCmd = "sync"
-            Write-Log "⚠️ 目前模式為 [嚴格鏡像同步 (Sync)]：來源已刪除的檔案，目的端也將被刪除！" "Red"
+            $ExtraArgs += "--delete-excluded"
+            Write-Log "⚠️ 目前模式為 [嚴格鏡像同步 (Sync)]：來源已刪除或新列入過濾 exclusions 的檔案，目的端也將被刪除！" "Red"
         } elseif ($SyncMode -eq "SyncArchive") {
             $SubCmd = "sync"
             $ArchiveStamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
@@ -260,8 +261,8 @@ switch ($Action) {
             } else {
                 Join-Path ($RemotePath.TrimEnd('\', '/') + "_Archive") $ArchiveStamp
             }
-            $ExtraArgs += @("--backup-dir", $BackupDir)
-            Write-Log "🛡️ 目前模式為 [同步+安全封存 (SyncArchive)]：目的端要刪除或覆寫的檔案會封存至 [$BackupDir]" "Yellow"
+            $ExtraArgs += @("--backup-dir", $BackupDir, "--delete-excluded")
+            Write-Log "🛡️ 目前模式為 [同步+安全封存 (SyncArchive)]：目的端要刪除或被排除的舊檔案會封存至 [$BackupDir]" "Yellow"
         } else {
             Write-Log "🟢 目前模式為 [安全增量備份 (Copy)]：只複製新增/修改的檔案，不會刪除目的端舊檔" "Green"
         }
@@ -296,7 +297,8 @@ switch ($Action) {
         $ExtraArgs = @()
         if ($SyncMode -eq "Sync") {
             $SubCmd = "sync"
-            Write-Log "⚠️ 開始 [嚴格鏡像同步 (Sync)]：來源已刪除的檔案，目的端也將跟著刪除！" "Red"
+            $ExtraArgs += "--delete-excluded"
+            Write-Log "⚠️ 開始 [嚴格鏡像同步 (Sync)]：來源已刪除或新列入過濾 exclusions 的檔案，目的端也將被刪除！" "Red"
         } elseif ($SyncMode -eq "SyncArchive") {
             $SubCmd = "sync"
             $ArchiveStamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
@@ -307,8 +309,8 @@ switch ($Action) {
             } else {
                 Join-Path ($RemotePath.TrimEnd('\', '/') + "_Archive") $ArchiveStamp
             }
-            $ExtraArgs += @("--backup-dir", $BackupDir)
-            Write-Log "🛡️ 開始 [同步+安全封存 (SyncArchive)]：被刪除/修改的舊檔案將封存至 [$BackupDir]" "Yellow"
+            $ExtraArgs += @("--backup-dir", $BackupDir, "--delete-excluded")
+            Write-Log "🛡️ 開始 [同步+安全封存 (SyncArchive)]：被刪除/修改/排除的舊檔案將封存至 [$BackupDir]" "Yellow"
         } else {
             Write-Log "🟢 開始 [安全增量備份 (Copy)]：只新增/更動，不刪除任何目的端舊資料..." "Green"
         }
