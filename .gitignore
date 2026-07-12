@@ -1,0 +1,20 @@
+# Visual Studio / .NET Build directories and files
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.sln.docstates
+.vs/
+*.log
+
+# Windows / OS temporary files
+Thumbs.db
+EHthumbs.db
+Desktop.ini
+.DS_Store
+
+# Test outputs and log files generated during runs
+rclone_backup_rules.txt
+rclone_backup_summary.txt
+rclone_dryrun.log
+rclone_dump_filters.log

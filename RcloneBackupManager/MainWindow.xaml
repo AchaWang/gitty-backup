@@ -1,0 +1,287 @@
+<Window x:Class="RcloneBackupManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Rclone 智能備份助理 (Rclone Backup Manager)" Height="760" Width="1060"
+        WindowStartupLocation="CenterScreen" Background="#1E1E2E" FontFamily="Segoe UI, Microsoft JhengHei">
+
+    <Window.Resources>
+        <!-- 圓角按鈕樣式 (一般藍色/紫色系) -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#313244"/>
+            <Setter Property="Foreground" Value="#CDD6F4"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                CornerRadius="8" Padding="14,8" BorderBrush="#45475A" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#45475A"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#585B70"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 主操作按鈕樣式 (高亮綠色/藍色) -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#89B4FA"/>
+            <Setter Property="Foreground" Value="#1E1E2E"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                CornerRadius="8" Padding="14,10" BorderBrush="#89B4FA" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#B4BEFE"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#74C7EC"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 執行備份按鈕 (高亮綠色) -->
+        <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#A6E3A1"/>
+            <Setter Property="Foreground" Value="#1E1E2E"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                CornerRadius="8" Padding="14,10" BorderBrush="#A6E3A1" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#94E2D5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#89DCEB"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 終端指令按鈕 (紅色警告) -->
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#F38BA8"/>
+            <Setter Property="Foreground" Value="#1E1E2E"/>
+        </Style>
+
+        <!-- 輸入框樣式 -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#11111B"/>
+            <Setter Property="Foreground" Value="#CDD6F4"/>
+            <Setter Property="BorderBrush" Value="#45475A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#89B4FA"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Header -->
+            <RowDefinition Height="Auto"/> <!-- 目標與遠端路徑設定 -->
+            <RowDefinition Height="Auto"/> <!-- 核心動作卡片區 -->
+            <RowDefinition Height="*"/>    <!-- Terminal 輸出視窗 -->
+            <RowDefinition Height="Auto"/> <!-- 狀態列 -->
+        </Grid.RowDefinitions>
+
+        <!-- 標題欄 -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="⚡ Rclone 智能備份與 Git 規則助理" FontSize="24" FontWeight="Bold" Foreground="#CDD6F4"/>
+                <TextBlock Text="自動遞迴掃描 Git 專案、解析多層級 .gitignore 規則，優化 Rclone 雲端與外接硬碟備份" FontSize="13" Foreground="#A6ADC8" Margin="0,4,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- 目標與目的地路徑設定區 -->
+        <Border Grid.Row="1" Background="#181825" CornerRadius="10" Padding="16" Margin="0,0,0,16" BorderBrush="#313244" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- 來源目錄 (Target Folder) -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="📁 來源目錄 (Target):" Foreground="#CDD6F4" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <TextBox x:Name="TargetDirTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,10,0"/>
+                <Button Grid.Row="0" Grid.Column="2" Content="瀏覽目錄..." Style="{StaticResource ModernButton}" Click="BrowseTargetDir_Click" Width="110"/>
+
+                <!-- 目的地/硬碟/雲端路徑 (Remote Path) -->
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="☁️ 備份目的地 (To):" Foreground="#CDD6F4" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <TextBox x:Name="RemotePathTextBox" Grid.Row="2" Grid.Column="1" Margin="0,0,10,0"/>
+                <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
+                    <Button Content="選硬碟資料夾" Style="{StaticResource ModernButton}" Click="BrowseRemoteDir_Click" Width="110"/>
+                </StackPanel>
+
+                <!-- 規則表檔案儲存/讀取位置 (Rules File Path) -->
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="📜 規則表檔案 (Rules):" Foreground="#CDD6F4" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <TextBox x:Name="RulesPathTextBox" Grid.Row="4" Grid.Column="1" Margin="0,0,10,0" ToolTip="預設將儲存在來源目錄下的 rclone_backup_rules.txt，您也可以自訂或指定既有的過濾表檔案"/>
+                <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal">
+                    <Button Content="選規則檔案..." Style="{StaticResource ModernButton}" Click="BrowseRulesFile_Click" Width="110"/>
+                </StackPanel>
+
+                <!-- 快速預設按鈕與 Git 歷史設定 -->
+                <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="快捷範例填入:" Foreground="#A6ADC8" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <Button Content="填入外接硬碟範例 (D:\Backup)" Style="{StaticResource ModernButton}" Padding="10,4" Margin="0,0,8,0" FontSize="12" Click="SetExampleHDD_Click"/>
+                    <Button Content="填入 Google Drive 範例 (gdrive:Backup)" Style="{StaticResource ModernButton}" Padding="10,4" Margin="0,0,20,0" FontSize="12" Click="SetExampleGDrive_Click"/>
+                    
+                    <CheckBox x:Name="chkIncludeGitHistory" Content="保留 .git 歷史紀錄目錄 (若取消勾選則排除 **/.git/**)" 
+                              IsChecked="True" Foreground="#F9E2AF" VerticalContentAlignment="Center" FontSize="13"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 核心動作卡片區 -->
+        <Grid Grid.Row="2" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Card 1: 掃描 Git 專案 -->
+            <Button Grid.Column="0" Style="{StaticResource ModernButton}" Click="BtnListRepos_Click">
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBlock Text="📦" FontSize="22" HorizontalAlignment="Center"/>
+                    <TextBlock Text="1. 掃描 Git 專案" FontWeight="Bold" Margin="0,6,0,2" HorizontalAlignment="Center"/>
+                    <TextBlock Text="列出工作區下的 Repo" FontSize="11" Foreground="#A6ADC8" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Card 2: 產出 Rclone 規則表 -->
+            <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" Click="BtnScanAndGenerate_Click">
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBlock Text="⚡" FontSize="22" HorizontalAlignment="Center"/>
+                    <TextBlock Text="2. 產出規則表" FontWeight="Bold" Margin="0,6,0,2" HorizontalAlignment="Center"/>
+                    <TextBlock Text="整合所有 .gitignore 規則" FontSize="11" Foreground="#1E1E2E" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Card 3: Dry Run 模擬測試 -->
+            <Button Grid.Column="4" Style="{StaticResource ModernButton}" Click="BtnDryRun_Click">
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBlock Text="🧪" FontSize="22" HorizontalAlignment="Center"/>
+                    <TextBlock Text="3. 模擬測試" FontWeight="Bold" Margin="0,6,0,2" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Dry-Run 驗證排除狀況" FontSize="11" Foreground="#A6ADC8" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Card 4: Dump Filters -->
+            <Button Grid.Column="6" Style="{StaticResource ModernButton}" Click="BtnDumpFilters_Click">
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBlock Text="🔍" FontSize="22" HorizontalAlignment="Center"/>
+                    <TextBlock Text="4. 檢視過濾樹" FontWeight="Bold" Margin="0,6,0,2" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Dump 檢查內部規則解析" FontSize="11" Foreground="#A6ADC8" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Card 5: 執行 Rclone 備份 -->
+            <Button Grid.Column="8" Style="{StaticResource SuccessButton}" Click="BtnBackup_Click">
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBlock Text="🚀" FontSize="22" HorizontalAlignment="Center"/>
+                    <TextBlock Text="5. 立即備份" FontWeight="Bold" Margin="0,6,0,2" HorizontalAlignment="Center"/>
+                    <TextBlock Text="開始同步至目標位置" FontSize="11" Foreground="#1E1E2E" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- 實時 Console 終端輸出 -->
+        <Border Grid.Row="3" Background="#11111B" CornerRadius="10" BorderBrush="#313244" BorderThickness="1" Padding="12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Console Header -->
+                <Grid Grid.Row="0" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="💻 執行輸出終端 Console" FontWeight="SemiBold" Foreground="#A6ADC8" FontSize="13"/>
+                        <TextBlock x:Name="txtTaskStatus" Text=" [就緒]" Foreground="#A6E3A1" FontSize="13" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="btnStopProcess" Content="⏹ 停止目前任務" Style="{StaticResource DangerButton}" Padding="10,4" Margin="0,0,8,0" Click="BtnStop_Click" IsEnabled="False"/>
+                        <Button Content="🗑 清除畫面" Style="{StaticResource ModernButton}" Padding="10,4" Click="BtnClearConsole_Click"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Console Output Text -->
+                <TextBox x:Name="ConsoleTextBox" Grid.Row="1" Background="Transparent" Foreground="#A6E3A1" 
+                         FontFamily="Consolas, Courier New" FontSize="13" IsReadOnly="True" 
+                         TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                         BorderThickness="0"/>
+            </Grid>
+        </Border>
+
+        <!-- 狀態列 -->
+        <Grid Grid.Row="4" Margin="0,12,0,0">
+            <TextBlock x:Name="StatusBarText" Text="歡迎使用 Rclone 智能備份助理。請先確認來源與目的地目錄，然後點選「2. 產出規則表」。" 
+                       Foreground="#A6ADC8" FontSize="12" VerticalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>
