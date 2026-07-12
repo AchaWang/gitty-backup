@@ -244,6 +244,21 @@ namespace RcloneBackupManager
                 return;
             }
 
+            // 確保 PowerShell 腳本具有 UTF-8 BOM，防止 PowerShell 5.1 把中文註解讀成亂碼導致語法錯誤
+            try
+            {
+                byte[] bytes = File.ReadAllBytes(scriptPath);
+                if (bytes.Length >= 3 && !(bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF))
+                {
+                    byte[] bom = new byte[] { 0xEF, 0xBB, 0xBF };
+                    byte[] newBytes = new byte[bom.Length + bytes.Length];
+                    Buffer.BlockCopy(bom, 0, newBytes, 0, bom.Length);
+                    Buffer.BlockCopy(bytes, 0, newBytes, bom.Length, bytes.Length);
+                    File.WriteAllBytes(scriptPath, newBytes);
+                }
+            }
+            catch { /* 忽略鎖定或唯讀錯誤 */ }
+
             string syncMode = "Copy";
             if (rbModeSyncArchive.IsChecked == true) syncMode = "SyncArchive";
             else if (rbModeSync.IsChecked == true) syncMode = "Sync";

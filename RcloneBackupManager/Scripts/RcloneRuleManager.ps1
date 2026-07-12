@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Rclone Rule Manager - 智能掃描 Git Repo 並生成 Rclone 過濾規則腳本
 .DESCRIPTION
