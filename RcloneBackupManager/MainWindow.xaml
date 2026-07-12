@@ -152,6 +152,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="12"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="130"/>
@@ -178,8 +180,16 @@
                     <Button Content="選規則檔案..." Style="{StaticResource ModernButton}" Click="BrowseRulesFile_Click" Width="110"/>
                 </StackPanel>
 
-                <!-- 快速預設按鈕與 Git 歷史設定 -->
+                <!-- 備份模式設定 (Backup Mode) -->
                 <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="⚙️ 傳輸與同步模式:" Foreground="#CDD6F4" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,12,0"/>
+                    <RadioButton x:Name="rbModeCopy" Content="🟢 安全增量 (Copy) - 不刪除舊檔" GroupName="SyncModeGroup" IsChecked="True" Foreground="#A6E3A1" VerticalContentAlignment="Center" Margin="0,0,16,0" FontSize="13" ToolTip="只把新增與更動的檔案複製到目的端，原本目的端有而來源沒有的舊檔案會繼續保留"/>
+                    <RadioButton x:Name="rbModeSyncArchive" Content="🛡️ 同步+封存 (Sync+Archive)" GroupName="SyncModeGroup" Foreground="#F9E2AF" VerticalContentAlignment="Center" Margin="0,0,16,0" FontSize="13" ToolTip="目的端完全同步來源狀態；被刪除或更動的舊檔案不會永久刪除，而是自動幫你封存到目的端 *_Archive 日期封存夾"/>
+                    <RadioButton x:Name="rbModeSync" Content="🔴 鏡像同步 (Sync) - 同步刪除" GroupName="SyncModeGroup" Foreground="#F38BA8" VerticalContentAlignment="Center" FontSize="13" ToolTip="嚴格鏡像同步：來源刪除什麼，目的端就跟著刪除什麼！"/>
+                </StackPanel>
+
+                <!-- 快速預設按鈕與 Git 歷史設定 -->
+                <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="快捷範例填入:" Foreground="#A6ADC8" VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <Button Content="填入外接硬碟範例 (D:\Backup)" Style="{StaticResource ModernButton}" Padding="10,4" Margin="0,0,8,0" FontSize="12" Click="SetExampleHDD_Click"/>
                     <Button Content="填入 Google Drive 範例 (gdrive:Backup)" Style="{StaticResource ModernButton}" Padding="10,4" Margin="0,0,20,0" FontSize="12" Click="SetExampleGDrive_Click"/>

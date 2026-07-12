@@ -244,17 +244,22 @@ namespace RcloneBackupManager
                 return;
             }
 
+            string syncMode = "Copy";
+            if (rbModeSyncArchive.IsChecked == true) syncMode = "SyncArchive";
+            else if (rbModeSync.IsChecked == true) syncMode = "Sync";
+
             SetUiBusy(true, statusDescription);
             AppendLog($"\n=======================================================");
             AppendLog($"執行動作: [{action}]");
             AppendLog($"來源目錄: {targetDir}");
             AppendLog($"備份目的地: {remotePath}");
             AppendLog($"過濾規則表: {rulesPath}");
+            AppendLog($"同步模式: [{syncMode}]");
             AppendLog($"保留 Git 歷史: {includeGit}");
             AppendLog($"=======================================================\n");
 
             string includeGitParam = includeGit ? "$true" : "$false";
-            string psCommand = $"& '{scriptPath}' -Action {action} -TargetDir '{targetDir}' -RemotePath '{remotePath}' -RulesFile '{rulesPath}' -IncludeGitHistory:{includeGitParam}";
+            string psCommand = $"& '{scriptPath}' -Action {action} -TargetDir '{targetDir}' -RemotePath '{remotePath}' -RulesFile '{rulesPath}' -SyncMode '{syncMode}' -IncludeGitHistory:{includeGitParam}";
 
             var psi = new ProcessStartInfo
             {

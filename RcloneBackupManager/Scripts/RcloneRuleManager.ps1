@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Rclone Rule Manager - 智能掃描 Git Repo 並生成 Rclone 過濾規則腳本
 .DESCRIPTION
@@ -23,6 +23,10 @@ param (
 
     [Parameter(Mandatory=$false)]
     [string]$RulesFile = "",
+
+    [Parameter(Mandatory=$false)]
+    [ValidateSet("Copy", "Sync", "SyncArchive")]
+    [string]$SyncMode = "Copy",
 
     [Parameter(Mandatory=$false)]
     [switch]$IncludeGitHistory = $true
@@ -224,11 +228,32 @@ switch ($Action) {
             return
         }
         $DryRunLog = Join-Path $TargetDir "rclone_dryrun.log"
-        Write-Log "正在執行 Rclone Dry-Run 測試 (模擬傳輸至 $RemotePath)..." "Cyan"
+        $SubCmd = "copy"
+        $ExtraArgs = @()
+        if ($SyncMode -eq "Sync") {
+            $SubCmd = "sync"
+            Write-Log "⚠️ 目前模式為 [嚴格鏡像同步 (Sync)]：來源已刪除的檔案，目的端也將被刪除！" "Red"
+        } elseif ($SyncMode -eq "SyncArchive") {
+            $SubCmd = "sync"
+            $ArchiveStamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
+            $BackupDir = if ($RemotePath -match '^[a-zA-Z]:\\') {
+                Join-Path ($RemotePath.TrimEnd('\') + "_Archive") $ArchiveStamp
+            } elseif ($RemotePath -match ':') {
+                $RemotePath.TrimEnd('/') + "_Archive/" + $ArchiveStamp
+            } else {
+                Join-Path ($RemotePath.TrimEnd('\', '/') + "_Archive") $ArchiveStamp
+            }
+            $ExtraArgs += @("--backup-dir", $BackupDir)
+            Write-Log "🛡️ 目前模式為 [同步+安全封存 (SyncArchive)]：目的端要刪除或覆寫的檔案會封存至 [$BackupDir]" "Yellow"
+        } else {
+            Write-Log "🟢 目前模式為 [安全增量備份 (Copy)]：只複製新增/修改的檔案，不會刪除目的端舊檔" "Green"
+        }
+
+        Write-Log "正在執行 Rclone ($SubCmd) Dry-Run 測試 (模擬傳輸至 $RemotePath)..." "Cyan"
         Write-Log "💡 為了保護 UI 與終端機不被幾十萬行檔案列表洗版當機，詳細比對清單將自動寫入: $DryRunLog" "Yellow"
         Write-Log "畫面將為你實時顯示傳輸進度與總結報告：" "Cyan"
-        rclone copy $TargetDir $RemotePath --filter-from $RulesFile --dry-run --progress --log-file $DryRunLog --log-level INFO
-        Write-Log "`n✅ Dry-Run 測試完成！詳細各檔案排除狀況已記錄在: $DryRunLog" "Green"
+        & rclone $SubCmd $TargetDir $RemotePath --filter-from $RulesFile --dry-run --progress --log-file $DryRunLog --log-level INFO @ExtraArgs
+        Write-Log "`n✅ Dry-Run 測試完成！詳細各檔案排除與模擬傳輸狀況已記錄在: $DryRunLog" "Green"
     }
 
     "DumpFilters" {
@@ -250,7 +275,28 @@ switch ($Action) {
             Write-Log "錯誤: 找不到 $RulesFile！請先執行 -Action ScanAndGenerate 產出規則。" "Red"
             return
         }
-        Write-Log "🚀 開始執行 Rclone 備份至 $RemotePath ..." "Green"
-        rclone copy $TargetDir $RemotePath --filter-from $RulesFile --progress
+        $SubCmd = "copy"
+        $ExtraArgs = @()
+        if ($SyncMode -eq "Sync") {
+            $SubCmd = "sync"
+            Write-Log "⚠️ 開始 [嚴格鏡像同步 (Sync)]：來源已刪除的檔案，目的端也將跟著刪除！" "Red"
+        } elseif ($SyncMode -eq "SyncArchive") {
+            $SubCmd = "sync"
+            $ArchiveStamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
+            $BackupDir = if ($RemotePath -match '^[a-zA-Z]:\\') {
+                Join-Path ($RemotePath.TrimEnd('\') + "_Archive") $ArchiveStamp
+            } elseif ($RemotePath -match ':') {
+                $RemotePath.TrimEnd('/') + "_Archive/" + $ArchiveStamp
+            } else {
+                Join-Path ($RemotePath.TrimEnd('\', '/') + "_Archive") $ArchiveStamp
+            }
+            $ExtraArgs += @("--backup-dir", $BackupDir)
+            Write-Log "🛡️ 開始 [同步+安全封存 (SyncArchive)]：被刪除/修改的舊檔案將封存至 [$BackupDir]" "Yellow"
+        } else {
+            Write-Log "🟢 開始 [安全增量備份 (Copy)]：只新增/更動，不刪除任何目的端舊資料..." "Green"
+        }
+
+        Write-Log "🚀 正在執行 rclone $SubCmd ..." "Green"
+        & rclone $SubCmd $TargetDir $RemotePath --filter-from $RulesFile --progress @ExtraArgs
     }
 }
