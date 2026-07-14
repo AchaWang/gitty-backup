@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-    Rclone Rule Manager - 智能掃描 Git Repo 並生成 Rclone 過濾規則腳本
+    Gitty-Backup Rule Manager - 智能掃描 Git Repo 並生成 Rclone 過濾規則腳本
 .DESCRIPTION
     本腳本具備以下功能：
     1. ScanAndGenerate: 遞迴搜尋指定目錄下所有的 Git Repo，收集所有 .gitignore (包含子資料夾) 並生成 rclone_backup_rules.txt

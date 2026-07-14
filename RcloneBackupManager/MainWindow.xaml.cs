@@ -229,17 +229,21 @@ namespace RcloneBackupManager
 
             if (!File.Exists(scriptPath))
             {
-                // 嘗試找上層或移動後的 _Project/rclone-ui 目錄
+                // 嘗試找上層或移動後的 _Project/gitty-backup 目錄
                 scriptPath = Path.GetFullPath(Path.Combine(baseDir, @"..\..\..\..\RcloneRuleManager.ps1"));
             }
 
+            if (!File.Exists(scriptPath))
+            {
+                scriptPath = @"C:\Users\Acha\Desktop\Acha\_Project\gitty-backup\RcloneRuleManager.ps1";
+            }
             if (!File.Exists(scriptPath))
             {
                 scriptPath = @"C:\Users\Acha\Desktop\Acha\_Project\rclone-ui\RcloneRuleManager.ps1";
             }
             if (!File.Exists(scriptPath))
             {
-                scriptPath = @"C:\Users\Acha\Desktop\Acha\rclone-ui\RcloneRuleManager.ps1";
+                scriptPath = @"C:\Users\Acha\Desktop\Acha\gitty-backup\RcloneRuleManager.ps1";
             }
 
             if (!File.Exists(scriptPath))

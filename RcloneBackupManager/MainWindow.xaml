@@ -1,7 +1,7 @@
 <Window x:Class="RcloneBackupManager.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Rclone 智能備份助理 (Rclone Backup Manager)" Height="760" Width="1060"
+        Title="Gitty-Backup —— 智能 Git 過濾與 Rclone 備份助理" Height="760" Width="1060"
         WindowStartupLocation="CenterScreen" Background="#1E1E2E" FontFamily="Segoe UI, Microsoft JhengHei">
 
     <Window.Resources>
@@ -136,7 +136,7 @@
         <!-- 標題欄 -->
         <Grid Grid.Row="0" Margin="0,0,0,16">
             <StackPanel Orientation="Vertical">
-                <TextBlock Text="⚡ Rclone 智能備份與 Git 規則助理" FontSize="24" FontWeight="Bold" Foreground="#CDD6F4"/>
+                <TextBlock Text="⚡ Gitty-Backup —— 智能 Git 過濾與 Rclone 備份助理" FontSize="24" FontWeight="Bold" Foreground="#CDD6F4"/>
                 <TextBlock Text="自動遞迴掃描 Git 專案、解析多層級 .gitignore 規則，優化 Rclone 雲端與外接硬碟備份" FontSize="13" Foreground="#A6ADC8" Margin="0,4,0,0"/>
             </StackPanel>
         </Grid>
