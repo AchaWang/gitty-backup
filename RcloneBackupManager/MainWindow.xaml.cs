@@ -166,6 +166,11 @@ namespace RcloneBackupManager
             }
         }
 
+        private void BtnCheck_Click(object sender, RoutedEventArgs e)
+        {
+            RunScriptAsync("Check", "正在進行 Rclone 嚴格雙向完整性校驗...");
+        }
+
         private void BtnStop_Click(object sender, RoutedEventArgs e)
         {
             try

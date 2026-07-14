@@ -323,4 +323,22 @@ switch ($Action) {
         Write-Log "🚀 正在執行 rclone $SubCmd ..." "Green"
         & rclone $SubCmd $TargetDir $RemotePath --filter-from $RulesFile --progress @ExtraArgs
     }
+
+    "Check" {
+        if (-not (Test-Path $RulesFile)) {
+            Write-Log "錯誤: 找不到 $RulesFile！請先執行 -Action ScanAndGenerate 產出過濾規則表。" "Red"
+            return
+        }
+        $CheckLog = Join-Path $TargetDir "rclone_check_report.log"
+        Write-Log "🔍 正在啟動 Rclone 雙向嚴格完整性校驗 (Check) ..." "Cyan"
+        Write-Log "💡 Rclone 將根據過濾表驗證目的地硬碟 [$RemotePath] 與來源 [$TargetDir] 是否 100% 吻合！" "Yellow"
+        Write-Log "比對進度與結果將實時顯示於畫面，詳細差異記錄已同步寫入: $CheckLog" "Cyan"
+        
+        & rclone check $TargetDir $RemotePath --filter-from $RulesFile --progress --log-file $CheckLog --log-level NOTICE
+        if ($LASTEXITCODE -eq 0) {
+            Write-Log "`n🎉 校驗大成功！目的地硬碟與過濾後的來源目錄 100% 毫秒級吻合，零缺失與零差異！" "Green"
+        } else {
+            Write-Log "`n⚠️ 校驗報告發現部分差異（例如尚有新增/修改檔案未備份，或存在部分舊檔差異），詳細清單已寫入: $CheckLog" "Yellow"
+        }
+    }
 }

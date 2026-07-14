@@ -212,6 +212,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="12"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <!-- Card 1: 掃描 Git 專案 -->
@@ -256,6 +258,15 @@
                     <TextBlock Text="🚀" FontSize="22" HorizontalAlignment="Center"/>
                     <TextBlock Text="5. 立即備份" FontWeight="Bold" Margin="0,6,0,2" HorizontalAlignment="Center"/>
                     <TextBlock Text="開始同步至目標位置" FontSize="11" Foreground="#1E1E2E" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Card 6: 完整性校驗 -->
+            <Button Grid.Column="10" Style="{StaticResource ModernButton}" Click="BtnCheck_Click">
+                <StackPanel Orientation="Vertical" Margin="4">
+                    <TextBlock Text="🛡️" FontSize="22" HorizontalAlignment="Center"/>
+                    <TextBlock Text="6. 完整性校驗" FontWeight="Bold" Margin="0,6,0,2" HorizontalAlignment="Center"/>
+                    <TextBlock Text="雙向嚴格核對完整度" FontSize="11" Foreground="#A6ADC8" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
         </Grid>
