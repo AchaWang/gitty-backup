@@ -9,11 +9,6 @@
 
 <br>
 
-<div align="center">
-  <video src="https://github.com/AchaWang/gitty-backup/raw/main/assets/gitty-backup-promo.mp4" controls="controls" autoplay="autoplay" loop="loop" muted="muted" width="90%"></video>
-  <p><em>🔺 點擊上方播放按鈕，即時預覽 Gitty-Backup 智能過濾與金庫模式展示 🔺</em></p>
-</div>
-
 ---
 
 ## 💡 為什麼需要 Gitty-Backup？
