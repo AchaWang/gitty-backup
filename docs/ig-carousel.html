@@ -220,6 +220,27 @@
       text-align: center;
       margin-top: 15px;
       box-shadow: 0 10px 25px rgba(137, 180, 250, 0.4);
+    .export-btn {
+      background: linear-gradient(135deg, #a6e3a1, #89dceb);
+      color: #11111b;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 10px 20px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(166, 227, 161, 0.4);
+      transition: all 0.2s ease;
+    }
+    .export-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(166, 227, 161, 0.6);
+    }
+    .export-btn:disabled {
+      background: #585b70;
+      box-shadow: none;
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -227,7 +248,8 @@
 
   <div class="toolbar">
     <h1>📱 Gitty-Backup —— IG 圖文卡片精靈</h1>
-    <span>長寬比 4:5 (標準 1080x1350 縮放) · 適用 Instagram / Threads / LinkedIn 宣傳</span>
+    <span>長寬比 4:5 (標準 1080x1350) · 點擊右方按鈕一鍵打包 PNG</span>
+    <button id="downloadBtn" class="export-btn" onclick="exportCards()">📥 下載 5 張 IG 高清圖 (`PNG` 1080x1350)</button>
   </div>
 
   <div class="carousel-container">
@@ -356,5 +378,30 @@
 
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    async function exportCards() {
+      const btn = document.getElementById('downloadBtn');
+      btn.innerText = '⏳ 正在渲染高清 PNG 中 (1/5)...';
+      btn.disabled = true;
+      const cards = document.querySelectorAll('.ig-card');
+      for (let i = 0; i < cards.length; i++) {
+        btn.innerText = `⏳ 正在導出第 ${i+1}/5 張 PNG...`;
+        const canvas = await html2canvas(cards[i], {
+          scale: 2, // 540x675 * 2 = exact 1080x1350 Portrait IG spec
+          backgroundColor: '#11111b',
+          useCORS: true,
+          logging: false
+        });
+        const link = document.createElement('a');
+        link.download = `GittyBackup_IG_Slide_${i + 1}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        await new Promise(r => setTimeout(r, 600));
+      }
+      btn.innerText = '✅ 5 張高清圖下載完成！';
+      btn.disabled = false;
+    }
+  </script>
 </body>
 </html>
