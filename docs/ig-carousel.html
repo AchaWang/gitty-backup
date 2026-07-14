@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ Gitty-Backup —— Instagram 宣傳圖文卡片展示套件 (1080x1350)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0d0e15;
+      color: #cdd6f4;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .toolbar {
+      background: rgba(30, 30, 46, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(205, 214, 244, 0.15);
+      padding: 15px 30px;
+      border-radius: 50px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      position: sticky;
+      top: 20px;
+      z-index: 1000;
+    }
+
+    .toolbar h1 {
+      font-size: 18px;
+      color: #89b4fa;
+      font-weight: 800;
+    }
+
+    .toolbar span {
+      font-size: 14px;
+      color: #a6adc8;
+    }
+
+    /* Carousel Grid */
+    .carousel-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+      max-width: 1900px;
+    }
+
+    /* IG Card Spec: 1080x1350 (4:5 Portrait Ratio) scaled down to 540x675 for screen viewing */
+    .ig-card {
+      width: 540px;
+      height: 675px;
+      background-color: #11111b;
+      border-radius: 32px;
+      position: relative;
+      overflow: hidden;
+      padding: 50px 45px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(205, 214, 244, 0.12);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(137, 180, 250, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 90% 90%, rgba(166, 227, 161, 0.1) 0%, transparent 50%);
+    }
+
+    .ig-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #89b4fa, #a6e3a1, #fab387, #f38ba8);
+    }
+
+    .card-num {
+      position: absolute;
+      top: 30px;
+      right: 35px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      color: #585b70;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(137, 180, 250, 0.15);
+      color: #89b4fa;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(137, 180, 250, 0.3);
+      width: fit-content;
+    }
+
+    .badge-red {
+      background: rgba(243, 139, 168, 0.15);
+      color: #f38ba8;
+      border-color: rgba(243, 139, 168, 0.3);
+    }
+
+    .badge-orange {
+      background: rgba(250, 179, 135, 0.15);
+      color: #fab387;
+      border-color: rgba(250, 179, 135, 0.3);
+    }
+
+    .badge-green {
+      background: rgba(166, 227, 161, 0.15);
+      color: #a6e3a1;
+      border-color: rgba(166, 227, 161, 0.3);
+    }
+
+    .card-title {
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1.3;
+      color: #cdd6f4;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+
+    .card-title span {
+      color: #89b4fa;
+    }
+
+    .card-desc {
+      font-size: 18px;
+      color: #bac2de;
+      line-height: 1.6;
+    }
+
+    .card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .code-box {
+      background: rgba(24, 24, 37, 0.9);
+      border: 1px solid rgba(205, 214, 244, 0.15);
+      border-radius: 16px;
+      padding: 18px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: #a6adc8;
+      margin-bottom: 15px;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .code-box.red { border-left: 4px solid #f38ba8; color: #f38ba8; }
+    .code-box.green { border-left: 4px solid #a6e3a1; color: #a6e3a1; }
+    .code-box.blue { border-left: 4px solid #89b4fa; color: #89b4fa; }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(205, 214, 244, 0.08);
+      padding-top: 20px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 16px;
+      color: #cdd6f4;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand span { color: #89b4fa; }
+
+    .swipe-hint {
+      font-size: 13px;
+      color: #585b70;
+      font-weight: 600;
+    }
+
+    .mode-card {
+      background: rgba(30, 30, 46, 0.6);
+      border-radius: 14px;
+      padding: 15px 18px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(205, 214, 244, 0.08);
+    }
+
+    .mode-card h4 { font-size: 16px; font-weight: 800; margin-bottom: 5px; }
+    .mode-card p { font-size: 13px; color: #a6adc8; line-height: 1.4; }
+
+    .neon-url {
+      background: linear-gradient(135deg, #89b4fa, #b4befe);
+      color: #11111b;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 18px;
+      padding: 16px 24px;
+      border-radius: 50px;
+      text-align: center;
+      margin-top: 15px;
+      box-shadow: 0 10px 25px rgba(137, 180, 250, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <h1>📱 Gitty-Backup —— IG 圖文卡片精靈</h1>
+    <span>長寬比 4:5 (標準 1080x1350 縮放) · 適用 Instagram / Threads / LinkedIn 宣傳</span>
+  </div>
+
+  <div class="carousel-container">
+
+    <!-- Card 1: The Hook -->
+    <div class="ig-card">
+      <div class="card-num">01 / 05</div>
+      <div>
+        <div class="badge">🚀 OPEN SOURCE TOOL</div>
+        <h2 class="card-title">每次備份專案，傳輸條都卡在 <span>node_modules</span>？ 🤔</h2>
+        <p class="card-desc">真正自己寫的代碼只有幾 MB，備份或同步硬碟時卻要傳輸幾萬個系統快取檔案，慢到懷疑人生...</p>
+      </div>
+
+      <div class="card-content">
+        <div class="code-box red">
+          ! [正在複製 35,421 個檔案... 剩餘 2 小時]
+        </div>
+        <div class="code-box green">
+          ✔ Gitty-Backup: 智能過濾完成 (耗時 0.1 秒)
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="brand">⚡ <span>Gitty-Backup</span></div>
+        <div class="swipe-hint">往左滑看解法 👉</div>
+      </div>
+    </div>
+
+    <!-- Card 2: Pain Point -->
+    <div class="ig-card">
+      <div class="card-num">02 / 05</div>
+      <div>
+        <div class="badge badge-red">❌ 傳統備份黑洞</div>
+        <h2 class="card-title">真正代碼 <span>5 MB</span><br>備份卻要傳 <span>500 MB</span>？</h2>
+        <p class="card-desc">軟體工程師、學生與研究人員的日常噩夢：資料夾裡充滿了隨時可重新安裝的第三方套件與暫存。</p>
+      </div>
+
+      <div class="card-content" style="gap: 12px;">
+        <div class="mode-card" style="border-left: 4px solid #f38ba8;">
+          <h4 style="color: #f38ba8;">🐢 消耗硬碟 I/O 與 SSD 壽命</h4>
+          <p>幾十萬個小碎檔同時寫入，讓隨身硬碟與 SSD 讀寫卡死。</p>
+        </div>
+        <div class="mode-card" style="border-left: 4px solid #f38ba8;">
+          <h4 style="color: #f38ba8;">☁️ 雲端 Drive 同步永遠卡住</h4>
+          <p>Google Drive 或 OneDrive 處理大量零碎檔案時極易超時斷線。</p>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="brand">⚡ <span>Gitty-Backup</span></div>
+        <div class="swipe-hint">如何精準過濾？ 👉</div>
+      </div>
+    </div>
+
+    <!-- Card 3: Solution -->
+    <div class="ig-card">
+      <div class="card-num">03 / 05</div>
+      <div>
+        <div class="badge badge-green">🌳 核心架構突破</div>
+        <h2 class="card-title">讓備份，像 <span>Git</span> 一樣精確優雅。</h2>
+        <p class="card-desc">將專案中的 <code>.gitignore</code> 視為單一真理來源，自動由深至淺讀取多層級過濾規則！</p>
+      </div>
+
+      <div class="card-content">
+        <div class="code-box blue" style="line-height: 1.8;">
+          # 自動過濾以下開發黑洞：<br>
+          🚫 node_modules/ &nbsp;&nbsp; 🚫 .venv/ & venv/<br>
+          🚫 bin/ & obj/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚫 .vs/ & .idea/<br>
+          ✨ 支援 ! 強制保留例外語法精準轉換！
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="brand">⚡ <span>Gitty-Backup</span></div>
+        <div class="swipe-hint">獨家殺手鐧模式 👉</div>
+      </div>
+    </div>
+
+    <!-- Card 4: Killer Feature -->
+    <div class="ig-card">
+      <div class="card-num">04 / 05</div>
+      <div>
+        <div class="badge badge-orange">🔥 獨家時光機金庫</div>
+        <h2 class="card-title">SyncArchive：<br><span>鏡像同步 + 歷史封存</span></h2>
+        <p class="card-desc">傳統鏡像 (Sync) 很容易因為本地手滑誤刪，把硬碟金庫裡的舊檔案也被連帶清空...</p>
+      </div>
+
+      <div class="card-content">
+        <div class="mode-card" style="border: 1px solid #fab387; background: rgba(250, 179, 135, 0.1);">
+          <h4 style="color: #fab387; font-size: 18px;">🛡️ 絕對防禦的「防後悔」機制</h4>
+          <p style="color: #f5c2e7; font-size: 14px; margin-top: 6px;">
+            當本地修改或刪除檔案時，系統<b>不會盲目永久刪除</b>，而是自動遷移至 <code>_Archive/YYYY-MM-DD/</code> 日期金庫保存！
+          </p>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="brand">⚡ <span>Gitty-Backup</span></div>
+        <div class="swipe-hint">免安裝便攜下載 👉</div>
+      </div>
+    </div>
+
+    <!-- Card 5: Call to Action -->
+    <div class="ig-card">
+      <div class="card-num">05 / 05</div>
+      <div>
+        <div class="badge">📦 RELEASE v1.0.0</div>
+        <h2 class="card-title">隨插即用便攜版<br><span>開源正式發佈！</span></h2>
+        <p class="card-desc">自帶 .NET 10 WPF 介面與官方 Rclone 引擎，單純 ZIP 解壓雙擊即開即用，免設定環境變數。</p>
+      </div>
+
+      <div class="card-content">
+        <div style="font-size: 15px; color: #a6e3a1; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <div>✔ 樹狀多層級 .gitignore 解析引擎</div>
+          <div>✔ 100ms 批次緩衝 UI，萬筆日誌不當機</div>
+          <div>✔ 完整性 MD5 / SHA1 雙向嚴格校驗</div>
+        </div>
+        <div class="neon-url">github.com/AchaWang/gitty-backup</div>
+      </div>
+
+      <div class="card-footer">
+        <div class="brand">⚡ <span>Gitty-Backup</span></div>
+        <div class="swipe-hint">❤️ 歡迎點讚與儲存收藏</div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
