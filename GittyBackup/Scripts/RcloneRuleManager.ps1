@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Rclone Rule Manager - 智能掃描 Git Repo 並生成 Rclone 過濾規則腳本
 .DESCRIPTION
@@ -46,6 +46,26 @@ if ([string]::IsNullOrWhiteSpace($RulesFile)) {
     $RulesFile = [System.IO.Path]::GetFullPath($RulesFile)
 }
 $SummaryFile = Join-Path (Split-Path $RulesFile -Parent) "rclone_backup_summary.txt"
+
+function Get-RcloneExe {
+    # 1. 優先尋找與本腳本同目錄下的 rclone.exe
+    $localExe = Join-Path $PSScriptRoot "rclone.exe"
+    if (Test-Path $localExe) { return $localExe }
+
+    # 2. 尋找主程式 GittyBackup.exe 所在目錄或 Tools 目錄下的 rclone.exe
+    if ($PSScriptRoot -match 'Scripts$') {
+        $parentExe = Join-Path (Split-Path $PSScriptRoot -Parent) "rclone.exe"
+        if (Test-Path $parentExe) { return $parentExe }
+        $toolsExe = Join-Path (Split-Path $PSScriptRoot -Parent) "Tools\rclone.exe"
+        if (Test-Path $toolsExe) { return $toolsExe }
+    }
+
+    # 3. 如果本地皆無，則使用系統環境變數中的 rclone
+    $cmd = Get-Command "rclone" -ErrorAction SilentlyContinue
+    if ($cmd) { return $cmd.Source }
+
+    throw "找不到 rclone 執行檔！請確認 rclone.exe 已放置於專案 Scripts 目錄中，或已將 rclone 安裝至系統 PATH。"
+}
 
 function Write-Log {
     param([string]$Message, [string]$Color = "White")
@@ -272,10 +292,12 @@ switch ($Action) {
             Write-Log "🟢 目前模式為 [安全增量備份 (Copy)]：只複製新增/修改的檔案，不會刪除目的端舊檔" "Green"
         }
 
+        $RcloneBin = Get-RcloneExe
+        Write-Log "⚙️ 偵測並使用 Rclone 引擎: $RcloneBin" "DarkCyan"
         Write-Log "正在執行 Rclone ($SubCmd) Dry-Run 測試 (模擬傳輸至 $RemotePath)..." "Cyan"
         Write-Log "💡 為了保護 UI 與終端機不被幾十萬行檔案列表洗版當機，詳細比對清單將自動寫入: $DryRunLog" "Yellow"
         Write-Log "畫面將為你實時顯示傳輸進度與總結報告：" "Cyan"
-        & rclone $SubCmd $TargetDir $RemotePath --filter-from $RulesFile --dry-run --progress --log-file $DryRunLog --log-level INFO @ExtraArgs
+        & $RcloneBin $SubCmd $TargetDir $RemotePath --filter-from $RulesFile --dry-run --progress --log-file $DryRunLog --log-level INFO @ExtraArgs
         Write-Log "`n✅ Dry-Run 測試完成！詳細各檔案排除與模擬傳輸狀況已記錄在: $DryRunLog" "Green"
     }
 
@@ -284,10 +306,12 @@ switch ($Action) {
             Write-Log "錯誤: 找不到 $RulesFile！請先執行 -Action ScanAndGenerate 產出規則。" "Red"
             return
         }
+        $RcloneBin = Get-RcloneExe
+        Write-Log "⚙️ 偵測並使用 Rclone 引擎: $RcloneBin" "DarkCyan"
         $DumpLog = Join-Path $TargetDir "rclone_dump_filters.log"
         Write-Log "正在執行 Dump 分析 Rclone 內部過濾規則樹狀結構..." "Cyan"
         Write-Log "💡 你的工作區可能包含數萬筆以上檔案，分析報告將分流儲存至: $DumpLog" "Yellow"
-        rclone ls $TargetDir --filter-from $RulesFile --dump filters 2>&1 | Out-File -FilePath $DumpLog -Encoding UTF8
+        & $RcloneBin ls $TargetDir --filter-from $RulesFile --dump filters 2>&1 | Out-File -FilePath $DumpLog -Encoding UTF8
         Write-Log "✅ Dump 分析完畢！以下為過濾樹前 30 行預覽：" "Green"
         Get-Content $DumpLog -TotalCount 30 | ForEach-Object { Write-Host "   $_" -ForegroundColor DarkGray }
         Write-Log "`n完整 $( (Get-Content $DumpLog | Measure-Object).Count ) 行的過濾比對樹狀報告，已儲存至: $DumpLog" "Cyan"
@@ -298,6 +322,8 @@ switch ($Action) {
             Write-Log "錯誤: 找不到 $RulesFile！請先執行 -Action ScanAndGenerate 產出規則。" "Red"
             return
         }
+        $RcloneBin = Get-RcloneExe
+        Write-Log "⚙️ 偵測並使用 Rclone 引擎: $RcloneBin" "DarkCyan"
         $SubCmd = "copy"
         $ExtraArgs = @()
         if ($SyncMode -eq "Sync") {
@@ -320,8 +346,8 @@ switch ($Action) {
             Write-Log "🟢 開始 [安全增量備份 (Copy)]：只新增/更動，不刪除任何目的端舊資料..." "Green"
         }
 
-        Write-Log "🚀 正在執行 rclone $SubCmd ..." "Green"
-        & rclone $SubCmd $TargetDir $RemotePath --filter-from $RulesFile --progress @ExtraArgs
+        Write-Log "🚀 正在執行 $RcloneBin $SubCmd ..." "Green"
+        & $RcloneBin $SubCmd $TargetDir $RemotePath --filter-from $RulesFile --progress @ExtraArgs
     }
 
     "Check" {
@@ -329,12 +355,14 @@ switch ($Action) {
             Write-Log "錯誤: 找不到 $RulesFile！請先執行 -Action ScanAndGenerate 產出過濾規則表。" "Red"
             return
         }
+        $RcloneBin = Get-RcloneExe
+        Write-Log "⚙️ 偵測並使用 Rclone 引擎: $RcloneBin" "DarkCyan"
         $CheckLog = Join-Path $TargetDir "rclone_check_report.log"
         Write-Log "🔍 正在啟動 Rclone 雙向嚴格完整性校驗 (Check) ..." "Cyan"
         Write-Log "💡 Rclone 將根據過濾表驗證目的地硬碟 [$RemotePath] 與來源 [$TargetDir] 是否 100% 吻合！" "Yellow"
         Write-Log "比對進度與結果將實時顯示於畫面，詳細差異記錄已同步寫入: $CheckLog" "Cyan"
         
-        & rclone check $TargetDir $RemotePath --filter-from $RulesFile --progress --log-file $CheckLog --log-level NOTICE
+        & $RcloneBin check $TargetDir $RemotePath --filter-from $RulesFile --progress --log-file $CheckLog --log-level NOTICE
         if ($LASTEXITCODE -eq 0) {
             Write-Log "`n🎉 校驗大成功！目的地硬碟與過濾後的來源目錄 100% 毫秒級吻合，零缺失與零差異！" "Green"
         } else {

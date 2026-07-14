@@ -18,3 +18,9 @@ rclone_backup_rules.txt
 rclone_backup_summary.txt
 rclone_dryrun.log
 rclone_dump_filters.log
+
+# Standalone Release & Binary assets (reserved for GitHub Releases)
+[Ss]tandalone_[Rr]elease/
+GittyBackup/Scripts/rclone.exe
+*.exe
+*.zip
