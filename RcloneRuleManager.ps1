@@ -8,11 +8,12 @@
     3. DryRun: 使用生成的過濾規則進行 Rclone 模擬測試 (--dry-run)
     4. DumpFilters: 輸出 Rclone 內部解析後的過濾規則分析 (--dump filters)
     5. Backup: 實際執行 Rclone 備份程序
+    6. Check: 檢查目前目錄的過濾規則命中狀況
 #>
 
 param (
     [Parameter(Mandatory=$false)]
-    [ValidateSet("ScanAndGenerate", "ListRepos", "DryRun", "DumpFilters", "Backup")]
+    [ValidateSet("ScanAndGenerate", "ListRepos", "DryRun", "DumpFilters", "Backup", "Check")]
     [string]$Action = "ScanAndGenerate",
 
     [Parameter(Mandatory=$false)]
@@ -100,7 +101,7 @@ switch ($Action) {
         $Summary += "偵測到 Git 專案數: $($Repos.Count)"
         $Summary += "------------------------------------------`n"
 
-        # --- 全域系統排除 (使用單引號防止 $RECYCLE 被 PowerShell 解析) ---
+        # --- 全域系統排除 ---
         $Rules += '# =========================================='
         $Rules += '# 1. 全域系統與暫存排除規則 (Global Excludes)'
         $Rules += '# =========================================='
@@ -111,6 +112,28 @@ switch ($Action) {
         $Rules += '- **/System Volume Information/**'
         $Rules += '- **/*.tmp'
         $Rules += '- **/*.log'
+        $Rules += ''
+
+        # --- 全局常見開發黑洞與暫存快取排除 ---
+        $Rules += '# =========================================='
+        $Rules += '# 1.5 全局通用開發黑洞與編譯快取過濾 (.vs/bin/obj等)'
+        $Rules += '# =========================================='
+        $Rules += '- **/.vs/**'
+        $Rules += '- **/.idea/**'
+        $Rules += '- **/.vscode/**'
+        $Rules += '- **/node_modules/**'
+        $Rules += '- **/.venv/**'
+        $Rules += '- **/venv/**'
+        $Rules += '- **/env/**'
+        $Rules += '- **/__pycache__/**'
+        $Rules += '- **/bin/**'
+        $Rules += '- **/obj/**'
+        $Rules += '- **/dist/**'
+        $Rules += '- **/build/**'
+        $Rules += '- **/pyvenv.cfg'
+        $Rules += '- **/*.suo'
+        $Rules += '- **/*.user'
+        $Rules += '- **/*.vsidx'
         $Rules += ''
 
         # --- 是否排除 .git 歷史目錄 ---
