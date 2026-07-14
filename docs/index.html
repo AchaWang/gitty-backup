@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚡ Gitty-Backup —— 智能 Git 過濾與 Rclone 備份助理</title>
-  <meta name="description" content="結合 GitOps 哲學與 .gitignore 樹狀過濾的極速，打造零垃圾、零漏網的 Rclone 增量備份金庫">
+  <title>⚡ Gitty-Backup —— 讓備份像 Git 一樣精確優雅</title>
+  <meta name="description" content="自動讀取 .gitignore 的智能 Rclone 備份助理。告別編譯快取黑洞，只備份真正重要的程式碼！">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +26,7 @@
     </a>
     <ul class="nav-links">
       <li><a href="#demo">線上互動模擬</a></li>
-      <li><a href="#features">核心工程哲學</a></li>
+      <li><a href="#features">核心特色</a></li>
       <li><a href="#modes">三大金庫模式</a></li>
       <li><a href="#architecture">專案架構與指令</a></li>
     </ul>
@@ -38,17 +38,18 @@
 
   <!-- Hero Section -->
   <header class="hero">
-    <div class="hero-badge">⚡ Git-Aware Rclone Backup Engine v1.0.0</div>
+    <div class="hero-badge">✨ 專為開發者打造的 Git 感知備份神器 v1.0</div>
     <h1>
-      告別 `node_modules` 與編譯快取黑洞<br>
-      <span class="gradient-text">打造 GitOps 極速純淨金庫</span>
+      讓備份，像 Git 一樣精確優雅。<br>
+      <span class="gradient-text">只備份真正重要的程式碼</span>
     </h1>
     <p>
-      Gitty-Backup 自動遞迴掃描整個工作區下的 Git 儲存庫，依據深度層級與優先權重解析 <b>.gitignore</b> 樹狀規則表，結合 <b>Rclone</b> 強悍多執行緒雙向傳輸，實現毫秒級、零垃圾的增量與封存備份。
+      每次備份硬碟或同步到雲端時，總被 <code>node_modules</code>、<code>.venv</code> 與幾十 GiB 的編譯快取拖慢速度？<br>
+      Gitty-Backup 結合 <b>Git-aware 感知過濾</b> 與 <b>Rclone 極速雙向同步</b>，自動遞迴讀取並嚴格遵守所有層級的 <code>.gitignore</code> 規則，讓你的備份金庫零垃圾、極速乾淨如新。
     </p>
     <div class="hero-actions">
-      <a href="#demo" class="btn-primary">🚀 立即體驗實時模擬</a>
-      <a href="#architecture" class="btn-secondary">📦 下載 125MB 免安裝便攜版</a>
+      <a href="#demo" class="btn-primary">🚀 觀看線上互動模擬</a>
+      <a href="#architecture" class="btn-secondary">💻 下載免安裝桌面版 (125 MB)</a>
     </div>
   </header>
 
@@ -82,28 +83,28 @@
   <section id="features" class="features-section">
     <div class="section-header">
       <h2>🧠 為什麼 Gitty-Backup 如此特別？</h2>
-      <p>專為現代化 C# / Python / Node.js 混雜開發工作區度身訂做的四大核心優勢</p>
+      <p>專為 C#、Python 與 Node.js 混雜開發工作區量身打造，重新定義備份效率</p>
     </div>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">🌳</div>
         <h3>樹狀多層級過濾引擎</h3>
-        <p>自動由深至淺排序解析所有子目錄中的 `.gitignore` 規則。完美支援 `!` 強制保留例外語法與深層通配符 (`/**/`) 轉換，絕不放過任何隱蔽規則。</p>
+        <p>自動由深至淺排序並解析工作區中每一張 <code>.gitignore</code> 規則。完美支援 <code>!</code> 強制保留例外語法與深層目錄匹配，精準過濾不漏網。</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🛡️</div>
         <h3>雙重全域黑洞防禦</h3>
-        <p>即使是尚未執行 `git init` 的課業練習或測試資料夾，也能在全域層級自動過濾 `.vs/`、`node_modules/`、`.venv/`、`bin/` 與 `obj/` 等千百萬個零碎垃圾檔。</p>
+        <p>即使是尚未執行 <code>git init</code> 的練習或測試資料夾，系統也會在全域層級自動攔截 <code>.vs/</code>、<code>node_modules/</code>、<code>bin/</code> 與 <code>obj/</code> 等數百萬個零碎垃圾。</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">⚡</div>
-        <h3>100ms 緩衝防當機 WPF</h3>
-        <p>控制中心採用背景獨立執行緒 (`Task`) 搭配 `DispatcherTimer` 批次刷新技術。面對三十萬筆檔案掃描，UI 也平滑滾動如絲，徹底告別當機卡死！</p>
+        <h3>100ms 批次緩衝 WPF 介面</h3>
+        <p>控制中心採用背景獨立執行緒搭配 100ms 批次緩衝更新技術。面對上萬筆檔案傳輸日誌，畫面依然絲滑滾動、極速反應，徹底告別當機卡死！</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">📦</div>
-        <h3>隨插即用免安裝自帶引擎</h3>
-        <p>提供單一 `.exe` 免安裝便攜版 (`125 MB`)，內置 `.NET 10 WPF` 運行時與核心過濾腳本。隨身碟插上任何 Windows 10/11 電腦立刻展開工作！</p>
+        <h3>隨插即用免安裝便攜版</h3>
+        <p>提供單一 <code>.exe</code> 獨立執行檔 (125 MB)，內建 <code>.NET 10</code> 運行時與核心腳本引擎。隨身碟一插，換任何 Windows 電腦都能高鐵秒開！</p>
       </div>
     </div>
   </section>
@@ -111,8 +112,8 @@
   <!-- Sync Modes Section -->
   <section id="modes" class="modes-section">
     <div class="section-header">
-      <h2>🛡️ 三大智慧同步與安全備份模式</h2>
-      <p>根據你的金庫潔癖與安全需求，隨意切換最適合的 Rclone 傳輸策略</p>
+      <h2>🛡️ 三大智慧同步與時光機模式</h2>
+      <p>無論你偏好保守增量，或是有嚴重強迫症的純淨鏡像，都能一鍵自由切換</p>
     </div>
     <div class="modes-tabs">
       <button class="mode-tab" data-tab="paneCopy">🟢 安全增量備份 (Copy)</button>
@@ -122,21 +123,21 @@
     <div class="mode-content-card">
       <div id="paneCopy" class="mode-pane">
         <h3>🟢 增量複製模式 <span class="mode-tag">rclone copy</span></h3>
-        <p><b>最保守與放心的安全模式！</b> 只會將來源端新增或有修改的檔案複製到目的地硬碟。如果目的地原本就存在某些舊檔案，即使你在來源端把它刪除了，目的地硬碟也<b>絕對不會刪除任何舊檔</b>。</p>
+        <p><b>最保守放心的安全策略。</b> 僅把新增或修改的原始碼複製到目的地硬碟。如果目的地早已存在舊版或多餘的檔案，系統<b>絕對不會主動刪除任何舊檔</b>。</p>
         <div class="code-box" style="margin-top: 1rem;">
           <code>rclone copy target_dir remote_path --filter-from rclone_backup_rules.txt -v --stats 2s</code>
         </div>
       </div>
       <div id="paneSync" class="mode-pane">
         <h3>⚠️ 嚴格鏡像模式 <span class="mode-tag">rclone sync --delete-excluded</span></h3>
-        <p><b>極致潔癖與強迫症專屬！</b> 確保目的地硬碟與你現在過濾後的專案結構 100% 鏡像吻合。如果你刪除了檔案，或新加入了 `.gitignore` 規則（如排除 `.vs`），目的地硬碟裡對應的舊檔案也將被乾脆清除！</p>
+        <p><b>極致潔癖與強迫症專屬。</b> 確保硬碟金庫與你當前的純淨原始碼 100% 鏡像吻合。若你在來源端刪除了檔案，或新加入了過濾規則，硬碟裡對應的舊檔也會立刻被清除！</p>
         <div class="code-box" style="margin-top: 1rem;">
           <code>rclone sync target_dir remote_path --filter-from rclone_backup_rules.txt --delete-excluded -v</code>
         </div>
       </div>
       <div id="paneSyncArchive" class="mode-pane active">
-        <h3>🛡️ 純淨鏡像 + 歷史時光機封存 <span class="mode-tag">rclone sync --backup-dir</span></h3>
-        <p><b>👑 本專案最強大的推薦金庫模式！</b> 在享受 100% 嚴格鏡像同步的同時，把目的地即將被覆寫或刪除的舊版本檔案，自動遷移並按照日期編號保存到 `_Archive/yyyy-MM-dd_HHmmss/` 資料夾中。既能隨時回溯舊版代碼，又能維持目的地主目錄的絕對純淨！</p>
+        <h3>🛡️ 純淨鏡像 + 時光機封存 <span class="mode-tag">rclone sync --backup-dir</span></h3>
+        <p><b>👑 本工具最自豪的推薦模式！</b> 實現 100% 嚴格鏡像同步的同時，把目的地即將被刪除或覆寫的檔案，自動封存遷移至 <code>_Archive/yyyy-MM-dd_HHmmss/</code> 資料夾。既能隨時找回歷史版本，又能維持主金庫的一塵不染！</p>
         <div class="code-box" style="margin-top: 1rem;">
           <code>rclone sync target_dir remote_path --filter-from rclone_backup_rules.txt --delete-excluded --backup-dir "Remote:_Archive/2026-07-15_235830" -v</code>
         </div>
@@ -163,7 +164,7 @@ Gitty-Backup/
     └── Scripts/RcloneRuleManager.ps1 &lt;-- 自動對齊最新版本腳本</pre>
     </div>
 
-    <h3 style="margin-bottom: 1rem; font-size: 1.25rem;">📦 一鍵打包免安裝單檔便攜版 (`Self-Contained Portable`)</h3>
+    <h3 style="margin-bottom: 1rem; font-size: 1.25rem;">📦 一鍵打包免安裝單檔便攜版 (Self-Contained Portable)</h3>
     <div class="code-box">
       <button class="copy-btn" data-copy="codePublish">Copy Command</button>
       <code id="codePublish">cd GittyBackup && dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o "../Standalone_Release"</code>
@@ -178,7 +179,7 @@ Gitty-Backup/
       <a href="#features">功能特色</a>
       <a href="#modes">三大金庫模式</a>
     </div>
-    <p>⚡ Designed with ❤️ using GitOps Philosophy. Released under MIT License.</p>
+    <p>⚡ Designed with ❤️ for clean developers. Released under MIT License.</p>
     <p style="margin-top: 0.5rem; font-size: 0.8rem;">© 2026 Gitty-Backup Project. All Rights Reserved.</p>
   </footer>
 

@@ -45,6 +45,17 @@ body {
   position: relative;
 }
 
+/* Inline Code Chips inside Text */
+p code, h3 code, li code {
+  background: rgba(137, 180, 250, 0.12);
+  color: var(--accent-cyan);
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  font-family: var(--font-code);
+  font-size: 0.88em;
+  border: 1px solid rgba(137, 180, 250, 0.22);
+}
+
 /* Background Ambient Glows */
 .bg-glow {
   position: absolute;
