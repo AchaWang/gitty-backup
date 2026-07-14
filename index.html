@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ Gitty-Backup —— 智能 Git 過濾與 Rclone 備份助理</title>
+  <meta name="description" content="結合 GitOps 哲學與 .gitignore 樹狀過濾的極速，打造零垃圾、零漏網的 Rclone 增量備份金庫">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Glows -->
+  <div class="bg-glow glow-top-left"></div>
+  <div class="bg-glow glow-top-right"></div>
+  <div class="bg-glow glow-bottom"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="#" class="nav-brand">
+      ⚡ <span>Gitty-Backup</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#demo">線上互動模擬</a></li>
+      <li><a href="#features">核心工程哲學</a></li>
+      <li><a href="#modes">三大金庫模式</a></li>
+      <li><a href="#architecture">專案架構與指令</a></li>
+    </ul>
+    <a href="https://github.com/achawang" target="_blank" class="btn-github">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+      GitHub Repo
+    </a>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="hero-badge">⚡ Git-Aware Rclone Backup Engine v1.0.0</div>
+    <h1>
+      告別 `node_modules` 與編譯快取黑洞<br>
+      <span class="gradient-text">打造 GitOps 極速純淨金庫</span>
+    </h1>
+    <p>
+      Gitty-Backup 自動遞迴掃描整個工作區下的 Git 儲存庫，依據深度層級與優先權重解析 <b>.gitignore</b> 樹狀規則表，結合 <b>Rclone</b> 強悍多執行緒雙向傳輸，實現毫秒級、零垃圾的增量與封存備份。
+    </p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn-primary">🚀 立即體驗實時模擬</a>
+      <a href="#architecture" class="btn-secondary">📦 下載 125MB 免安裝便攜版</a>
+    </div>
+  </header>
+
+  <!-- Interactive Terminal Section -->
+  <section id="demo" class="terminal-section">
+    <h2 class="terminal-header-title">💻 實時過濾與同步模擬器</h2>
+    <div class="terminal-controls">
+      <button class="term-btn" data-action="ListRepos">1. 列出 Git 專案</button>
+      <button class="term-btn active" data-action="ScanAndGenerate">2. 產出過濾表</button>
+      <button class="term-btn" data-action="DryRun">3. 模擬測試 (Dry-Run)</button>
+      <button class="term-btn" data-action="SyncArchive">4. 同步與安全封存</button>
+      <button class="term-btn" data-action="Check">🛡️ 完整性校驗 (Check)</button>
+    </div>
+    <div class="terminal-window">
+      <div class="terminal-topbar">
+        <div class="terminal-dots">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+        </div>
+        <div class="terminal-title">powershell — GittyBackup -Action <span id="termActionDisplay">ScanAndGenerate</span></div>
+        <div style="width: 40px;"></div>
+      </div>
+      <div id="terminalBody" class="terminal-body">
+        <!-- JS injected interactive logs -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section id="features" class="features-section">
+    <div class="section-header">
+      <h2>🧠 為什麼 Gitty-Backup 如此特別？</h2>
+      <p>專為現代化 C# / Python / Node.js 混雜開發工作區度身訂做的四大核心優勢</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🌳</div>
+        <h3>樹狀多層級過濾引擎</h3>
+        <p>自動由深至淺排序解析所有子目錄中的 `.gitignore` 規則。完美支援 `!` 強制保留例外語法與深層通配符 (`/**/`) 轉換，絕不放過任何隱蔽規則。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>雙重全域黑洞防禦</h3>
+        <p>即使是尚未執行 `git init` 的課業練習或測試資料夾，也能在全域層級自動過濾 `.vs/`、`node_modules/`、`.venv/`、`bin/` 與 `obj/` 等千百萬個零碎垃圾檔。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>100ms 緩衝防當機 WPF</h3>
+        <p>控制中心採用背景獨立執行緒 (`Task`) 搭配 `DispatcherTimer` 批次刷新技術。面對三十萬筆檔案掃描，UI 也平滑滾動如絲，徹底告別當機卡死！</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>隨插即用免安裝自帶引擎</h3>
+        <p>提供單一 `.exe` 免安裝便攜版 (`125 MB`)，內置 `.NET 10 WPF` 運行時與核心過濾腳本。隨身碟插上任何 Windows 10/11 電腦立刻展開工作！</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sync Modes Section -->
+  <section id="modes" class="modes-section">
+    <div class="section-header">
+      <h2>🛡️ 三大智慧同步與安全備份模式</h2>
+      <p>根據你的金庫潔癖與安全需求，隨意切換最適合的 Rclone 傳輸策略</p>
+    </div>
+    <div class="modes-tabs">
+      <button class="mode-tab" data-tab="paneCopy">🟢 安全增量備份 (Copy)</button>
+      <button class="mode-tab" data-tab="paneSync">⚠️ 嚴格鏡像同步 (Sync)</button>
+      <button class="mode-tab active" data-tab="paneSyncArchive">🛡️ 同步 + 時光機封存 (SyncArchive🔥)</button>
+    </div>
+    <div class="mode-content-card">
+      <div id="paneCopy" class="mode-pane">
+        <h3>🟢 增量複製模式 <span class="mode-tag">rclone copy</span></h3>
+        <p><b>最保守與放心的安全模式！</b> 只會將來源端新增或有修改的檔案複製到目的地硬碟。如果目的地原本就存在某些舊檔案，即使你在來源端把它刪除了，目的地硬碟也<b>絕對不會刪除任何舊檔</b>。</p>
+        <div class="code-box" style="margin-top: 1rem;">
+          <code>rclone copy target_dir remote_path --filter-from rclone_backup_rules.txt -v --stats 2s</code>
+        </div>
+      </div>
+      <div id="paneSync" class="mode-pane">
+        <h3>⚠️ 嚴格鏡像模式 <span class="mode-tag">rclone sync --delete-excluded</span></h3>
+        <p><b>極致潔癖與強迫症專屬！</b> 確保目的地硬碟與你現在過濾後的專案結構 100% 鏡像吻合。如果你刪除了檔案，或新加入了 `.gitignore` 規則（如排除 `.vs`），目的地硬碟裡對應的舊檔案也將被乾脆清除！</p>
+        <div class="code-box" style="margin-top: 1rem;">
+          <code>rclone sync target_dir remote_path --filter-from rclone_backup_rules.txt --delete-excluded -v</code>
+        </div>
+      </div>
+      <div id="paneSyncArchive" class="mode-pane active">
+        <h3>🛡️ 純淨鏡像 + 歷史時光機封存 <span class="mode-tag">rclone sync --backup-dir</span></h3>
+        <p><b>👑 本專案最強大的推薦金庫模式！</b> 在享受 100% 嚴格鏡像同步的同時，把目的地即將被覆寫或刪除的舊版本檔案，自動遷移並按照日期編號保存到 `_Archive/yyyy-MM-dd_HHmmss/` 資料夾中。既能隨時回溯舊版代碼，又能維持目的地主目錄的絕對純淨！</p>
+        <div class="code-box" style="margin-top: 1rem;">
+          <code>rclone sync target_dir remote_path --filter-from rclone_backup_rules.txt --delete-excluded --backup-dir "Remote:_Archive/2026-07-15_235830" -v</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture & Build Section -->
+  <section id="architecture" class="code-section">
+    <div class="section-header">
+      <h2>🏛️ 專案收斂架構與一鍵建置</h2>
+      <p>完全零散落的精簡目錄設計，支援本地或 CLI 快速編譯</p>
+    </div>
+    <div class="code-box" style="margin-bottom: 2rem;">
+      <pre style="color: #cdd6f4;">
+Gitty-Backup/
+├── GittyBackup/                      &lt;-- C# WPF 現代化主控制中心
+│   ├── GittyBackup.csproj            &lt;-- .NET 10.0 WPF 專案設定檔
+│   ├── MainWindow.xaml / .cs         &lt;-- 雙向滾動日誌與後端邏輯
+│   └── Scripts/                      &lt;-- 🔥 唯一的 PowerShell 過濾引擎金庫
+│       └── RcloneRuleManager.ps1     &lt;-- 建置時 MSBuild 自動精準同步輸出
+└── Standalone_Release/               &lt;-- 🚀 125MB 便攜免安裝發布金庫
+    ├── GittyBackup.exe               &lt;-- 雙擊即開，自帶 WPF 與 .NET 引擎
+    └── Scripts/RcloneRuleManager.ps1 &lt;-- 自動對齊最新版本腳本</pre>
+    </div>
+
+    <h3 style="margin-bottom: 1rem; font-size: 1.25rem;">📦 一鍵打包免安裝單檔便攜版 (`Self-Contained Portable`)</h3>
+    <div class="code-box">
+      <button class="copy-btn" data-copy="codePublish">Copy Command</button>
+      <code id="codePublish">cd GittyBackup && dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o "../Standalone_Release"</code>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/achawang" target="_blank">GitHub</a>
+      <a href="#demo">線上模擬</a>
+      <a href="#features">功能特色</a>
+      <a href="#modes">三大金庫模式</a>
+    </div>
+    <p>⚡ Designed with ❤️ using GitOps Philosophy. Released under MIT License.</p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;">© 2026 Gitty-Backup Project. All Rights Reserved.</p>
+  </footer>
+
+  <!-- Custom JS -->
+  <script src="app.js"></script>
+</body>
+</html>
