@@ -1,4 +1,4 @@
-<Window x:Class="RcloneBackupManager.MainWindow"
+<Window x:Class="GittyBackup.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Gitty-Backup —— 智能 Git 過濾與 Rclone 備份助理" Height="760" Width="1060"

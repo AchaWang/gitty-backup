@@ -1,8 +1,8 @@
-﻿using System.Configuration;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 
-namespace RcloneBackupManager;
+namespace GittyBackup;
 
 /// <summary>
 /// Interaction logic for App.xaml

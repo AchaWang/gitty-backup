@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Win32;
 
-namespace RcloneBackupManager
+namespace GittyBackup
 {
     public partial class MainWindow : Window
     {
@@ -229,17 +229,17 @@ namespace RcloneBackupManager
 
             if (!File.Exists(scriptPath))
             {
-                // 嘗試找上層或移動後的 _Project/gitty-backup 目錄
-                scriptPath = Path.GetFullPath(Path.Combine(baseDir, @"..\..\..\..\RcloneRuleManager.ps1"));
+                // 嘗試找專案下的 Scripts/RcloneRuleManager.ps1
+                scriptPath = Path.GetFullPath(Path.Combine(baseDir, @"..\..\..\..\GittyBackup\Scripts\RcloneRuleManager.ps1"));
             }
 
             if (!File.Exists(scriptPath))
             {
-                scriptPath = @"C:\Users\Acha\Desktop\Acha\_Project\gitty-backup\RcloneRuleManager.ps1";
+                scriptPath = @"C:\Users\Acha\Desktop\Acha\_Project\gitty-backup\GittyBackup\Scripts\RcloneRuleManager.ps1";
             }
             if (!File.Exists(scriptPath))
             {
-                scriptPath = @"C:\Users\Acha\Desktop\Acha\_Project\rclone-ui\RcloneRuleManager.ps1";
+                scriptPath = @"C:\Users\Acha\Desktop\Acha\_Project\gitty-backup\Scripts\RcloneRuleManager.ps1";
             }
             if (!File.Exists(scriptPath))
             {

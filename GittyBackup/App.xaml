@@ -1,7 +1,7 @@
-﻿<Application x:Class="RcloneBackupManager.App"
+<Application x:Class="GittyBackup.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RcloneBackupManager"
+             xmlns:local="clr-namespace:GittyBackup"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
