@@ -1,6 +1,6 @@
-# ⚡ Gitty-Backup —— 智能 Git 過濾與 Rclone 備份助理
+# ⚡ Gitty-Backup —— 讓備份，像 Git 一樣精確優雅
 
-> **「結合 GitOps 哲學與 `.gitignore` 樹狀層級過濾，打造零編譯快取、零漏網的 Rclone 智慧備份金庫」**
+> **「整合式備份與同步工具 · 自動排除不需要的零碎檔案。秉持 Git 風格的精準哲學，只備份真正重要的核心資料！」**
 
 ![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6?style=flat-square&logo=windows)
 ![Framework](https://img.shields.io/badge/.NET-10.0%20WPF-512BD4?style=flat-square&logo=dotnet)
