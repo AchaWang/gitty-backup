@@ -249,16 +249,42 @@
   <div class="toolbar">
     <h1>📱 Gitty-Backup —— IG 圖文卡片精靈</h1>
     <span>長寬比 4:5 (標準 1080x1350) · 點擊右方按鈕一鍵打包 PNG</span>
-    <button id="downloadBtn" class="export-btn" onclick="exportCards()">📥 下載 5 張 IG 高清圖 (`PNG` 1080x1350)</button>
+    <button id="downloadBtn" class="export-btn" onclick="exportCards()">📥 下載 6 張 IG 高清圖 (`PNG` 1080x1350)</button>
   </div>
 
   <div class="carousel-container">
 
-    <!-- Card 1: The Hook -->
+    <!-- Card 1: For Non-Engineers (Universal Data Backup Tool) -->
     <div class="ig-card">
-      <div class="card-num">01 / 05</div>
+      <div class="card-num">01 / 06</div>
       <div>
-        <div class="badge">🚀 OPEN SOURCE TOOL</div>
+        <div class="badge" style="background: rgba(245, 194, 231, 0.15); color: #f5c2e7; border: 1px solid rgba(245, 194, 231, 0.3);">💼 職場 / 學術通用神器</div>
+        <h2 class="card-title">通用資料備份工具：<br><span>給非工程師看得懂的安心防護</span> ✨</h2>
+        <p class="card-desc">不是寫程式也能用！不管你是行政辦公、設計師還是研究生，都能以最乾淨、最安全的方式同步文件到隨身硬碟或雲端/NAS。</p>
+      </div>
+
+      <div class="card-content" style="gap: 12px;">
+        <div class="mode-card" style="border-left: 4px solid #f5c2e7; background: rgba(245, 194, 231, 0.08);">
+          <h4 style="color: #f5c2e7; font-size: 16px;">📁 辦公報告與設計圖稿一鍵備份</h4>
+          <p style="font-size: 13px; color: #cdd6f4;">自動幫你排除 <code>~$</code> 暫存或系統快取檔，只把真正有用的核心文件整齊存進外接硬碟。</p>
+        </div>
+        <div class="mode-card" style="border-left: 4px solid #89dceb; background: rgba(137, 220, 235, 0.08);">
+          <h4 style="color: #89dceb; font-size: 16px;">🛡️ 防手滑誤刪的「時光機金庫」</h4>
+          <p style="font-size: 13px; color: #cdd6f4;">覆蓋或誤刪了重要 Excel/PPT？系統自動把修改前的檔案存到日期金庫，隨時找回上一版！</p>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="brand">⚡ <span>Gitty-Backup</span></div>
+        <div class="swipe-hint">極客與工程師怎麼用？ 👉</div>
+      </div>
+    </div>
+
+    <!-- Card 2: The Hook (For Developers) -->
+    <div class="ig-card">
+      <div class="card-num">02 / 06</div>
+      <div>
+        <div class="badge">🚀 FOR DEVELOPERS</div>
         <h2 class="card-title">每次備份專案，傳輸條都卡在 <span>node_modules</span>？ 🤔</h2>
         <p class="card-desc">真正自己寫的代碼只有幾 MB，備份或同步硬碟時卻要傳輸幾萬個系統快取檔案，慢到懷疑人生...</p>
       </div>
@@ -274,13 +300,13 @@
 
       <div class="card-footer">
         <div class="brand">⚡ <span>Gitty-Backup</span></div>
-        <div class="swipe-hint">往左滑看解法 👉</div>
+        <div class="swipe-hint">傳統備份有什麼痛點？ 👉</div>
       </div>
     </div>
 
-    <!-- Card 2: Pain Point -->
+    <!-- Card 3: Pain Point -->
     <div class="ig-card">
-      <div class="card-num">02 / 05</div>
+      <div class="card-num">03 / 06</div>
       <div>
         <div class="badge badge-red">❌ 傳統備份黑洞</div>
         <h2 class="card-title">真正代碼 <span>5 MB</span><br>備份卻要傳 <span>500 MB</span>？</h2>
@@ -304,9 +330,9 @@
       </div>
     </div>
 
-    <!-- Card 3: Solution -->
+    <!-- Card 4: Solution -->
     <div class="ig-card">
-      <div class="card-num">03 / 05</div>
+      <div class="card-num">04 / 06</div>
       <div>
         <div class="badge badge-green">🌳 核心架構突破</div>
         <h2 class="card-title">讓備份，像 <span>Git</span> 一樣精確優雅。</h2>
@@ -328,9 +354,9 @@
       </div>
     </div>
 
-    <!-- Card 4: Killer Feature -->
+    <!-- Card 5: Killer Feature -->
     <div class="ig-card">
-      <div class="card-num">04 / 05</div>
+      <div class="card-num">05 / 06</div>
       <div>
         <div class="badge badge-orange">🔥 獨家時光機金庫</div>
         <h2 class="card-title">SyncArchive：<br><span>鏡像同步 + 歷史封存</span></h2>
@@ -352,9 +378,9 @@
       </div>
     </div>
 
-    <!-- Card 5: Call to Action -->
+    <!-- Card 6: Call to Action -->
     <div class="ig-card">
-      <div class="card-num">05 / 05</div>
+      <div class="card-num">06 / 06</div>
       <div>
         <div class="badge">📦 RELEASE v1.0.0</div>
         <h2 class="card-title">隨插即用便攜版<br><span>開源正式發佈！</span></h2>
@@ -382,11 +408,11 @@
   <script>
     async function exportCards() {
       const btn = document.getElementById('downloadBtn');
-      btn.innerText = '⏳ 正在渲染高清 PNG 中 (1/5)...';
+      btn.innerText = '⏳ 正在渲染高清 PNG 中 (1/6)...';
       btn.disabled = true;
       const cards = document.querySelectorAll('.ig-card');
       for (let i = 0; i < cards.length; i++) {
-        btn.innerText = `⏳ 正在導出第 ${i+1}/5 張 PNG...`;
+        btn.innerText = `⏳ 正在導出第 ${i+1}/6 張 PNG...`;
         const canvas = await html2canvas(cards[i], {
           scale: 2, // 540x675 * 2 = exact 1080x1350 Portrait IG spec
           backgroundColor: '#11111b',
@@ -399,7 +425,7 @@
         link.click();
         await new Promise(r => setTimeout(r, 600));
       }
-      btn.innerText = '✅ 5 張高清圖下載完成！';
+      btn.innerText = '✅ 6 張高清圖下載完成！';
       btn.disabled = false;
     }
   </script>
